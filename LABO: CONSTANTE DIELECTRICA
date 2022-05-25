@@ -1,0 +1,214 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0] 
+y = [151.8, 255.64, 372.9, 493.24, 589.38, 642.4, 810.7, 865.92]
+
+###### AJUSTE LINEAL POR MÍNIMOS CUADRADOS: Y = mX + b
+def ajuste_lineal(xi,yi):               #ajuste lineal por mínimos cuadrados
+  xm = np.mean(xi)                      #Cálculo de medias y sumas
+  ym = np.mean(yi)
+  sx = np.sum(xi)
+  sy = np.sum(yi)
+  xy = []
+  x2 = []
+  y2 = []
+  for j in range(len(xi)):
+    xy.append(xi[j]*yi[j]) 
+    x2.append(xi[j]*xi[j])
+    y2.append(yi[j]*yi[j])
+  sxy = np.sum(xy)
+  sx2 = np.sum(x2)
+  sy2 = np.sum(y2)
+  n = len(xi)                           #cantidad de datos de las listas
+
+  m = (n*sxy - sx*sy)/(n*sx2 - sx**2)   #cálculo de pendiente
+  b = ym - m*xm                        #cálculo de intercepto
+
+  fx = []
+  for j in range(len(xi)): 
+    fx.append(m*xi[j]+b)                 #Ecuación de recta ajustada (es una lista)
+  return m, b, fx                       #pendiente, intercepto, y_ajustado
+
+########### PRIMER EXPERIMENTO ###########
+########### 1ERA PARTE
+datos1 = pd.read_excel(r"/content/drive/MyDrive/UNI/LABO3/labo3.xlsx", sheet_name='Hoja1')   #Ensayo A,B,C, 1era y 2da parte
+datos1_np = np.array(datos1)   # Convierto de class (pandas a numpy)  DATOS 1ERA Y 2DA PARTE
+
+Uc1a = []                      # EXTRACCIÓN DE DATOS 1ERA PARTE, ENSAYO A
+Q1a = []
+
+Uc1b = []                      # EXTRACCIÓN DE DATOS 1ERA PARTE, ENSAYO B
+Q1b = []
+
+Uc1c = []                      # EXTRACCIÓN DE DATOS 1ERA PARTE, ENSAYO C
+Q1c = []
+#print(len(datos1_np))         # De la fila 0 a la 26 = 27 filas
+for i in range(4,12):          # De la fila 6 a 13 DEL EXCEL
+  Uc1a.append(datos1_np[i,2])  # dato1_np[i,2] = fila i = 4, columna 2 (contando desde 0)
+  Q1a.append(datos1_np[i,5])           
+
+for i in range(4,12):          # De la fila 6 a 13 DEL EXCEL
+  Uc1b.append(datos1_np[i,8])  # dato1_np[i,2] = fila i = 4, columna 8
+  Q1b.append(datos1_np[i,11])
+
+for i in range(4,12):          # De la fila 6 a 13 DEL EXCEL
+  Uc1c.append(datos1_np[i,14]) # dato1_np[i,2] = fila i = 4, columna 14
+  Q1c.append(datos1_np[i,17])
+
+#### ENSAYO A
+Q1a_error =  [22.99,27.06,39.37,52.01,62.10,67.67,85.34,91.14]   # Datos prueba, EXTRAER DEL EXCEL
+plt.plot(Uc1a,Q1a,'o', label='Ensayo A')
+m1a,b1a,f1a = ajuste_lineal(Uc1a,Q1a)        # pendiente, intercepto, y_ajustado ENSAYO A
+plt.plot(Uc1a,f1a, label = 'Ajuste A')
+plt.errorbar(Uc1a,Q1a,yerr = Q1a_error, fmt = 'o', ecolor='black', capsize=4)   # Barra de error en eje Y
+plt.xlabel('Uc (kV)')
+plt.ylabel('Q (nC)')
+plt.title('Ensayo A')
+plt.grid()
+plt.show()
+### ENSAYO B
+Q1b_error =  [22.07,28.01,38.36,50.81,63.15,68.87,81.65,88.00]   # Datos prueba, EXTRAER DEL EXCEL
+plt.plot(Uc1b,Q1b,'o', label='Ensayo B')
+m1b,b1b,f1b = ajuste_lineal(Uc1b,Q1b)        # pendiente, intercepto, y_ajustado ENSAYO B
+plt.plot(Uc1b,f1b, label = 'Ajuste B')
+plt.errorbar(Uc1b,Q1b,yerr = Q1b_error, fmt = 'o', ecolor='black', capsize=4)   # Barra de error en eje Y
+plt.xlabel('Uc (kV)')
+plt.ylabel('Q (nC)')
+plt.title('Ensayo B')
+plt.grid()
+plt.show()
+### ENSAYO C
+Q1c_error =  [22.52,26.46,33.07,44.80,60.74,65.59,69.75,89.39]   # Datos prueba, EXTRAER DEL EXCEL
+plt.plot(Uc1c,Q1c,'o', label='Ensayo C')
+m1c,b1c,f1c = ajuste_lineal(Uc1c,Q1c)        # pendiente, intercepto, y_ajustado ENSAYO C
+plt.plot(Uc1c,f1c, label = 'Ajuste C')
+plt.errorbar(Uc1c,Q1c,yerr = Q1c_error, fmt = 'o', ecolor='black', capsize=4)   # Barra de error en eje Y
+plt.xlabel('Uc (kV)')
+plt.ylabel('Q (nC)')
+plt.title('Ensayo C')
+plt.legend()
+plt.grid()
+plt.show()
+
+########### PRIMER EXPERIMENTO ###########
+########### 2DA PARTE
+d2a = []                      # EXTRACCIÓN DE DATOS 2ERA PARTE, ENSAYO A
+Q2a = []
+
+d2b = []                      # EXTRACCIÓN DE DATOS 2ERA PARTE, ENSAYO B
+Q2b = []
+
+d2c = []                      # EXTRACCIÓN DE DATOS 2ERA PARTE, ENSAYO C
+Q2c = []
+#print(len(datos1_np))         # De la fila 0 a la 26 = 27 filas
+for i in range(18,26):         # De la fila 20 a 27 DEL EXCEL
+  d2a.append(datos1_np[i,2])  # dato1_np[i,2] = fila i = 4, columna 2 (contando desde 0)
+  Q2a.append(datos1_np[i,5])           
+
+for i in range(18,26):          
+  d2b.append(datos1_np[i,8])  
+  Q2b.append(datos1_np[i,11])
+#print(d2b)
+for i in range(18,26):          
+  d2c.append(datos1_np[i,14]) 
+  Q2c.append(datos1_np[i,17])
+
+print(Q2a)
+print(Q2b)
+print(Q2c)
+#### ENSAYO A
+Q2a_error =  [28.66,23.04,20.20,16.69,15.74,14.43,20.14,19.03]   # Datos prueba, EXTRAER DEL EXCEL
+plt.plot(d2a,Q2a,'o', label='Ensayo A')
+m2a,b2a,f2a = ajuste_lineal(d2a,Q2a)        # pendiente, intercepto, y_ajustado ENSAYO A
+plt.plot(d2a,f2a, label = 'Ajuste A')
+plt.errorbar(d2a,Q2a,yerr = Q2a_error, fmt = 'o', ecolor='black', capsize=4)   # Barra de error en eje Y
+plt.xlabel('1/d (cm^{-1})')
+plt.ylabel('Q (nC)')
+plt.legend()
+plt.title('Ensayo A')
+plt.grid()
+plt.show()
+#### ENSAYO B
+Q2b_error =  [30.13,23.81,19.76,17.55,15.84,14.43,13.16,12.56]   # Datos prueba, EXTRAER DEL EXCEL
+plt.plot(d2b,Q2b,'o', label='Ensayo B')
+m2b,b2b,f2b = ajuste_lineal(d2b,Q2b)        # pendiente, intercepto, y_ajustado ENSAYO A
+plt.plot(d2b,f2b, label = 'Ajuste B')
+plt.errorbar(d2b,Q2b,yerr = Q2b_error, fmt = 'o', ecolor='black', capsize=4)   # Barra de error en eje Y
+plt.xlabel('1/d (cm^{-1})')
+plt.ylabel('Q (nC)')
+plt.legend()
+plt.title('Ensayo B')
+plt.grid()
+plt.show()
+#### ENSAYO C
+Q2c_error =  [29.88,23.78,20.36,17.61,16.07,14.52,20.33,19.75]   # Datos prueba, EXTRAER DEL EXCEL
+plt.plot(d2c,Q2c,'o', label='Ensayo C')
+m2c,b2c,f2c = ajuste_lineal(d2c,Q2c)        # pendiente, intercepto, y_ajustado ENSAYO A
+plt.plot(d2c,f2c, label = 'Ajuste C')
+plt.errorbar(d2c,Q2c,yerr = Q2c_error, fmt = 'o', ecolor='black', capsize=4)   # Barra de error en eje Y
+plt.xlabel('1/d (cm^{-1})')
+plt.ylabel('Q (nC)')
+plt.legend()
+plt.grid()
+plt.title('Ensayo C')
+plt.show()
+
+########### SEGUNDO EXPERIMENTO ###########
+###########
+datos2 = pd.read_excel(r"/content/drive/MyDrive/UNI/LABO3/labo3.xlsx", sheet_name='Hoja2')   #Ensayo D y E
+datos2_np = np.array(datos2)   # Convierto de class (pandas a numpy)  DATOS 2DO EXPERIMENTO
+
+Uc_d = []                      # EXTRACCIÓN DE DATOS, ENSAYO D (PLÁSTICO)
+Qp_d = []                 
+Q_d = []
+
+Uc_e = []                      # EXTRACCIÓN DE DATOS, ENSAYO E (VIDRIO)
+Qv_e = []                   
+Q_e = []
+
+print(len(datos2_np))          # De la fila 0 a la 24 = 25 filas
+for i in range(4,12):          # De la fila (0-5)6 a 13 DEL EXCEL
+  Uc_d.append(datos2_np[i,2])  # datos2_np[i,2] = fila i = 4(contando desde 0), columna 2 (contando desde 0)
+  Qp_d.append(datos2_np[i,7])
+  Q_d.append(datos2_np[i,9])
+for i in range(18,24):          # De la fila (0-5)6 a 13 DEL EXCEL
+  Uc_e.append(datos2_np[i,2])  # datos2_np[i,2] = fila i = 4(contando desde 0), columna 2 (contando desde 0)
+  Qv_e.append(datos2_np[i,7])
+  Q_e.append(datos2_np[i,9])
+
+#### ENSAYO D
+Qp_derror =  [19.26,23.81,35.86,44.66,55.13,62.31,72.06,85.83]   # Datos prueba, EXTRAER DEL EXCEL
+Q_derror = [11.1,15.15,19.29,16.16,20.32,23.44,27.36,30.25]
+plt.plot(Uc_d,Qp_d,'o', label='Qp')
+mp_d,bp_d,fp_d = ajuste_lineal(Uc_d,Qp_d)        # pendiente, intercepto, y_ajustado ENSAYO E
+plt.plot(Uc_d,fp_d, label = 'Ajuste Qp')
+plt.errorbar(Uc_d,Qp_d,yerr = Qp_derror, fmt = 'o', ecolor='black', capsize=4)   # Barra de error en eje Y
+plt.plot(Uc_d,Q_d,'o',label='Q')
+m_d,b_d,f_d = ajuste_lineal(Uc_d,Q_d)
+plt.errorbar(Uc_d,Q_d,yerr = Q_derror, fmt = 'o', ecolor='black', capsize=4)   # Barra de error en eje Y
+plt.plot(Uc_d,f_d, label = 'Ajuste Q')
+plt.xlabel('Uc (kV)')
+plt.ylabel('Q (nC)')
+plt.title('Ensayo D')
+plt.legend()
+plt.grid()
+plt.show()
+#### ENSAYO E
+Qv_eerror =  [59.36,122.58,149.03,233.76,241.38,252.47]   # Datos prueba, EXTRAER DEL EXCEL
+Q_eerror = [19.36,22.88,28.63,43.88,53.93,66.42]
+plt.plot(Uc_e,Qv_e,'o', label='Qv')
+m_e,b_e,f_e = ajuste_lineal(Uc_e,Qv_e)        # pendiente, intercepto, y_ajustado ENSAYO E
+plt.plot(Uc_e,f_e, label = 'Ajuste Qv')
+plt.errorbar(Uc_e,Qv_e,yerr = Qv_eerror, fmt = 'o', ecolor='black', capsize=4)   # Barra de error en eje Y
+plt.plot(Uc_e,Q_e,'o',label='Q')
+m_e,b_e,f_e = ajuste_lineal(Uc_e,Q_e)
+plt.plot(Uc_e,f_e, label = 'Ajuste Q')
+plt.errorbar(Uc_e,Q_e,yerr = Qv_eerror, fmt = 'o', ecolor='black', capsize=4)   # Barra de error en eje Y
+plt.xlabel('Uc (kV)')
+plt.ylabel('Q (nC)')
+plt.title('Ensayo E')
+plt.legend()
+plt.grid()
+plt.show()            #Para mostrar gráfico por separado
